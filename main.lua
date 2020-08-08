@@ -1,7 +1,7 @@
 function love.load()
     love.window.setTitle("Sudoku")
     love.window.setMode(700, 400)
-    backgroundColorCode = 0.85
+    backgroundColorCode = 1
     backgroundColor = {backgroundColorCode, backgroundColorCode, backgroundColorCode}
 end
 
