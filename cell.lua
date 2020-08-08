@@ -10,7 +10,7 @@ function Cell:initialize(x, y, width)
     self.x = x
     self.y = y
     self.width = width
-    self.value = 1
+    self.value = 0
     self.font = love.graphics.newFont("fonts/Adequate.ttf", 29)
     self.normalColor = {1, 1, 1}
 
@@ -33,18 +33,23 @@ end
 function Cell:hasValue()
     -- If value is 0 then it has no value.
 
-    if self.value then
-        return true
+    if self.value == 0 then
+        return false
     end
 
-    return false
+    return true
 end
 
 function Cell:mousePressed(x, y, button, istouch, presses)
     if x >= self.x and x <= (self.x + self.width) and y >= self.y and y <= (self.y + self.width) then
-        if self.state == self.states.normal then
-            self.state = self.states.setValue
-        elseif self.state == self.states.setValue then
+        if button == 1 then
+            if self.state == self.states.normal then
+                self.state = self.states.setValue
+            elseif self.state == self.states.setValue then
+                self.state = self.states.normal
+            end
+        elseif button == 2 then
+            self.value = 0
             self.state = self.states.normal
         end
     end
