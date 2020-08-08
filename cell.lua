@@ -2,7 +2,7 @@ local class = require "lib/middleclass"
 
 Cell = class("Cell")
 
-function Cell:initialize(x, y, width)
+function Cell:initialize(x, y, width, value)
     -- Initializes cell with
     -- position x, y
     -- size width
@@ -10,7 +10,7 @@ function Cell:initialize(x, y, width)
     self.x = x
     self.y = y
     self.width = width
-    self.value = 0
+    self.value = value
     self.font = love.graphics.newFont("fonts/Adequate.ttf", 29)
     self.normalColor = {1, 1, 1}
 
