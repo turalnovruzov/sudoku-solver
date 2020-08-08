@@ -12,10 +12,13 @@ function Cell:initialize(x, y, width)
     self.width = width
     self.value = 1
     self.font = love.graphics.newFont("fonts/Adequate.ttf", 29)
-    colorCode = 0.8
-    self.color = {colorCode, colorCode, colorCode}
-    outlineColorCode = 0.02
-    self.outlineColor = {outlineColorCode, outlineColorCode, outlineColorCode}
+    self.color = {1, 1, 1}
+
+    -- 189, 199, 212
+    self.outlineColor = {189 / 255, 199 / 255, 212 / 255}
+
+    -- 29, 46, 66
+    self.textColor = {29 / 255, 46 / 255, 66 / 255}
 
     self.states = {
         normal=0,
@@ -69,6 +72,7 @@ function Cell:draw()
 
     -- Number
     if self:hasValue() then
+        love.graphics.setColor(self.textColor)
         love.graphics.printf(tostring(self.value), self.font, self.x, self.y, self.width, "center")
     end
 end
