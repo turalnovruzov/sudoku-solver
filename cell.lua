@@ -34,12 +34,20 @@ function Cell:hasValue()
     return false
 end
 
-function Cell:mousePressed( x, y, button, istouch, presses )
+function Cell:mousePressed(x, y, button, istouch, presses)
     if x >= self.x and x <= (self.x + self.width) and y >= self.y and y <= (self.y + self.width) then
         if self.state == self.states.normal then
             self.state = self.states.setValue
         elseif self.state == self.states.setValue then
             self.state = self.states.normal
+        end
+    end
+end
+
+function Cell:keyPressed(key, scancode, isrepeat)
+    if self.state == self.states.setValue then
+        if key >= "1" and key <= "9" then
+            self.value = tonumber(key)
         end
     end
 end
