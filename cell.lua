@@ -17,9 +17,6 @@ function Cell:initialize(x, y, width, value)
     -- 187, 222, 251
     self.setValueColor = {187 / 255, 222 / 255, 251 / 255}
 
-    -- 189, 199, 212
-    self.outlineColor = {189 / 255, 199 / 255, 212 / 255}
-
     -- 29, 46, 66
     self.textColor = {29 / 255, 46 / 255, 66 / 255}
 
@@ -99,9 +96,6 @@ function Cell:draw()
 
     -- Fill
     love.graphics.rectangle("fill", self.x, self.y, self.width, self.width)
-    -- Outline
-    love.graphics.setColor(self.outlineColor)
-    love.graphics.rectangle("line", self.x, self.y, self.width, self.width)
 
     -- Number
     if self:hasValue() then
