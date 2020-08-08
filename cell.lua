@@ -23,9 +23,13 @@ function Cell:initialize(x, y, width, value)
     -- 29, 46, 66
     self.textColor = {29 / 255, 46 / 255, 66 / 255}
 
+    -- 221, 238, 254
+    self.hoverColor = {221 / 255, 238 / 255, 254 / 255}
+
     self.states = {
         normal=0,
-        setValue=1
+        setValue=1,
+        hover=2
     }
     self.state = self.states.normal
 end
@@ -40,13 +44,21 @@ function Cell:hasValue()
     return true
 end
 
-function Cell:mousePressed(x, y, button, istouch, presses)
+function Cell:isColliding(x, y)
     if x >= self.x and x <= (self.x + self.width) and y >= self.y and y <= (self.y + self.width) then
+        return true
+    end
+
+    return false
+end
+
+function Cell:mousePressed(x, y, button, istouch, presses)
+    if self:isColliding(x, y) then
         if button == 1 then
-            if self.state == self.states.normal then
-                self.state = self.states.setValue
-            elseif self.state == self.states.setValue then
+            if self.state == self.states.setValue then
                 self.state = self.states.normal
+            else
+                self.state = self.states.setValue
             end
         elseif button == 2 then
             self.value = 0
@@ -64,7 +76,16 @@ function Cell:keyPressed(key, scancode, isrepeat)
 end
 
 function Cell:update(dt)
-
+    -- Mouse hover
+    if self.state == self.states.normal then
+        if self:isColliding(love.mouse.getX(), love.mouse.getY()) then
+            self.state = self.states.hover
+        end
+    elseif self.state == self.states.hover then
+        if not self:isColliding(love.mouse.getX(), love.mouse.getY()) then
+            self.state = self.states.normal
+        end
+    end
 end
 
 function Cell:draw()
@@ -72,6 +93,8 @@ function Cell:draw()
         love.graphics.setColor(self.normalColor)
     elseif self.state == self.states.setValue then
         love.graphics.setColor(self.setValueColor)
+    elseif self.state == self.states.hover then
+        love.graphics.setColor(self.hoverColor)
     end
 
     -- Fill
