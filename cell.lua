@@ -16,6 +16,12 @@ function Cell:initialize(x, y, width)
     self.color = {colorCode, colorCode, colorCode}
     outlineColorCode = 0.02
     self.outlineColor = {outlineColorCode, outlineColorCode, outlineColorCode}
+
+    self.states = {
+        normal=0,
+        setValue=1
+    }
+    self.state = self.states.normal
 end
 
 function Cell:hasValue()
@@ -28,18 +34,30 @@ function Cell:hasValue()
     return false
 end
 
+function Cell:mousePressed( x, y, button, istouch, presses )
+    if x >= self.x and x <= (self.x + self.width) and y >= self.y and y <= (self.y + self.width) then
+        if self.state == self.states.normal then
+            self.state = self.states.setValue
+        elseif self.state == self.states.setValue then
+            self.state = self.states.normal
+        end
+    end
+end
+
 function Cell:update(dt)
 
 end
 
 function Cell:draw()
-    -- Fill
-    love.graphics.setColor(self.color)
-    love.graphics.rectangle("fill", self.x, self.y, self.width, self.width)
+    if self.state == self.states.normal then
+        -- Fill
+        love.graphics.setColor(self.color)
+        love.graphics.rectangle("fill", self.x, self.y, self.width, self.width)
 
-    -- Outline
-    love.graphics.setColor(self.outlineColor)
-    love.graphics.rectangle("line", self.x, self.y, self.width, self.width)
+        -- Outline
+        love.graphics.setColor(self.outlineColor)
+        love.graphics.rectangle("line", self.x, self.y, self.width, self.width)
+    end
 
     -- Number
     if self:hasValue() then
