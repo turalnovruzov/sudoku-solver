@@ -39,10 +39,12 @@ function Board:update()
 end
 
 function Board:draw()
-    -- Draw cells
-    for i, row in ipairs(self.cells) do
-        for j, cell in ipairs(row) do
-            cell:draw()
+    if self.state == self.states.normal then
+        -- Draw cells
+        for i, row in ipairs(self.cells) do
+            for j, cell in ipairs(row) do
+                cell:draw()
+            end
         end
     end
 end
