@@ -41,6 +41,14 @@ function Cell:hasValue()
     return true
 end
 
+function Cell:isFocused()
+    if self.state == self.states.setValue then
+        return true
+    end
+
+    return false
+end
+
 function Cell:isColliding(x, y)
     if x >= self.x and x <= (self.x + self.width) and y >= self.y and y <= (self.y + self.width) then
         return true
