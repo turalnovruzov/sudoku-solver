@@ -1,6 +1,7 @@
 function love.load()
     love.window.setTitle("Sudoku")
-    love.window.setMode(700, 400)
+    love.window.setMode(750, 480)
+    love.graphics.setDefaultFilter('nearest', 'nearest')
     backgroundColorCode = 1
     backgroundColor = {backgroundColorCode, backgroundColorCode, backgroundColorCode}
 end
