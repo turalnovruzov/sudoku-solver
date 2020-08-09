@@ -11,7 +11,7 @@ function Cell:initialize(x, y, width, value)
     self.y = y
     self.width = width
     self.value = value
-    self.font = love.graphics.newFont("fonts/SourceSansPro-Regular.ttf", 30)
+    self.font = love.graphics.newFont("fonts/SourceSansPro-Regular.ttf", 35)
     self.normalColor = {1, 1, 1}
 
     -- 187, 222, 251
