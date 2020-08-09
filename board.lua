@@ -42,8 +42,34 @@ function Board:initialize(x, y)
     self.state = self.states.normal
 end
 
-function Board:update()
+function Board:mousePressed(x, y, button, istouch, presses)
+    if self.state == self.states.normal then
+        for i, row in ipairs(self.cells) do
+            for j, cell in ipairs(row) do
+                cell:mousePressed(x, y, button, istouch, presses)
+            end
+        end
+    end
+end
 
+function Board:keyPressed(key, scancode, isrepeat)
+    if self.state == self.states.normal then
+        for i, row in ipairs(self.cells) do
+            for j, cell in ipairs(row) do
+                cell:keyPressed(key, scancode, isrepeat)
+            end
+        end
+    end
+end
+
+function Board:update()
+    if self.state == self.states.normal then
+        for i, row in ipairs(self.cells) do
+            for j, cell in ipairs(row) do
+                cell:update(dt)
+            end
+        end
+    end
 end
 
 function Board:draw()
