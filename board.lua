@@ -21,11 +21,97 @@ function Board:initialize(x, y)
         x_ = self.x + 1
 
         for j=1,9 do
-            self.cells[i][j] = Cell:new(x_, y_, self.cellWidth, 1)
+            self.cells[i][j] = Cell:new(x_, y_, self.cellWidth, 0)
             x_ = x_ + self.cellWidth + 1
         end
 
         y_ = y_ + self.cellWidth + 1
+    end
+
+    local squares = { {
+            ["x"] = 0,
+            ["y"] = 4,
+            value = 2
+        }, {
+            ["x"] = 0,
+            ["y"] = 5,
+            value = 5
+        }, {
+            ["x"] = 1,
+            ["y"] = 1,
+            value = 5
+        }, {
+            ["x"] = 1,
+            ["y"] = 7,
+            value = 2
+        }, {
+            ["x"] = 2,
+            ["y"] = 4,
+            value = 3
+        }, {
+            ["x"] = 2,
+            ["y"] = 6,
+            value = 5
+        }, {
+            ["x"] = 2,
+            ["y"] = 8,
+            value = 4
+        }, {
+            ["x"] = 3,
+            ["y"] = 0,
+            value = 2
+        }, {
+            ["x"] = 3,
+            ["y"] = 3,
+            value = 5
+        }, {
+            ["x"] = 4,
+            ["y"] = 2,
+            value = 1
+        }, {
+            ["x"] = 4,
+            ["y"] = 6,
+            value = 4
+        }, {
+            ["x"] = 5,
+            ["y"] = 1,
+            value = 9
+        }, {
+            ["x"] = 5,
+            ["y"] = 6,
+            value = 1
+        }, {
+            ["x"] = 6,
+            ["y"] = 4,
+            value = 8
+        }, {
+            ["x"] = 6,
+            ["y"] = 8,
+            value = 3
+        }, {
+            ["x"] = 7,
+            ["y"] = 1,
+            value = 3
+        }, {
+            ["x"] = 7,
+            ["y"] = 7,
+            value = 4
+        }, {
+            ["x"] = 8,
+            ["y"] = 0,
+            value = 4
+        }, {
+            ["x"] = 8,
+            ["y"] = 5,
+            value = 9
+        }, {
+            ["x"] = 8,
+            ["y"] = 8,
+            value = 8
+        } }
+      
+    for i, v in ipairs(squares) do
+        self.cells[v.x + 1][v.y + 1].value = v.value
     end
 
     -- Colors
