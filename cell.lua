@@ -15,7 +15,7 @@ function Cell:initialize(x, y, width, value)
     self.normalColor = {1, 1, 1}
 
     -- 187, 222, 251
-    self.setValueColor = {187 / 255, 222 / 255, 251 / 255}
+    self.focusColor = {187 / 255, 222 / 255, 251 / 255}
 
     -- 29, 46, 66
     self.textColor = {29 / 255, 46 / 255, 66 / 255}
@@ -23,10 +23,11 @@ function Cell:initialize(x, y, width, value)
     -- 221, 238, 254
     self.hoverColor = {221 / 255, 238 / 255, 254 / 255}
 
+    self.hover = false
+
     self.states = {
         normal=0,
-        setValue=1,
-        hover=2
+        focus=1
     }
     self.state = self.states.normal
 end
@@ -42,7 +43,7 @@ function Cell:hasValue()
 end
 
 function Cell:isFocused()
-    if self.state == self.states.setValue then
+    if self.state == self.states.focus then
         return true
     end
 
@@ -60,10 +61,10 @@ end
 function Cell:mousePressed(x, y, button, istouch, presses)
     if self:isColliding(x, y) then
         if button == 1 then
-            if self.state == self.states.setValue then
+            if self.state == self.states.focus then
                 self.state = self.states.normal
             else
-                self.state = self.states.setValue
+                self.state = self.states.focus
             end
         elseif button == 2 then
             self.value = 0
@@ -73,7 +74,7 @@ function Cell:mousePressed(x, y, button, istouch, presses)
 end
 
 function Cell:keyPressed(key, scancode, isrepeat)
-    if self.state == self.states.setValue then
+    if self.state == self.states.focus then
         if key >= "1" and key <= "9" then
             self.value = tonumber(key)
         end
@@ -84,22 +85,22 @@ function Cell:update(dt)
     -- Mouse hover
     if self.state == self.states.normal then
         if self:isColliding(love.mouse.getX(), love.mouse.getY()) then
-            self.state = self.states.hover
-        end
-    elseif self.state == self.states.hover then
-        if not self:isColliding(love.mouse.getX(), love.mouse.getY()) then
-            self.state = self.states.normal
+            self.hover = true
+        else
+            self.hover = false
         end
     end
 end
 
 function Cell:draw()
     if self.state == self.states.normal then
-        love.graphics.setColor(self.normalColor)
-    elseif self.state == self.states.setValue then
-        love.graphics.setColor(self.setValueColor)
-    elseif self.state == self.states.hover then
-        love.graphics.setColor(self.hoverColor)
+        if self.hover then
+            love.graphics.setColor(self.hoverColor)
+        else
+            love.graphics.setColor(self.normalColor)
+        end
+    elseif self.state == self.states.focus then
+        love.graphics.setColor(self.focusColor)
     end
 
     -- Fill
