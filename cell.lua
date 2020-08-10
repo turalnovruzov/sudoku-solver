@@ -23,6 +23,7 @@ function Cell:initialize(x, y, width, value)
     -- 221, 238, 254
     self.hoverColor = {221 / 255, 238 / 255, 254 / 255}
 
+    -- Whether the mouse is hovering over the cell
     self.hover = false
 
     self.states = {
@@ -33,7 +34,8 @@ function Cell:initialize(x, y, width, value)
 end
 
 function Cell:hasValue()
-    -- If value is 0 then it has no value.
+    -- Checks if the cell has value
+    -- Returns false if cell's value is 0, true otherwise
 
     if self.value == 0 then
         return false
@@ -43,6 +45,9 @@ function Cell:hasValue()
 end
 
 function Cell:isFocused()
+    -- Checks if the current state is focus
+    -- Returns true if the state is focus, false otherwise
+
     if self.state == self.states.focus then
         return true
     end
@@ -51,6 +56,9 @@ function Cell:isFocused()
 end
 
 function Cell:isColliding(x, y)
+    -- Checks if the given point collides with the cell
+    -- Returns true if collides, false otherwise
+
     if x >= self.x and x <= (self.x + self.width) and y >= self.y and y <= (self.y + self.width) then
         return true
     end
@@ -59,14 +67,23 @@ function Cell:isColliding(x, y)
 end
 
 function Cell:mousePressed(x, y, button, istouch, presses)
+
+    -- If the mouse is colliding with the cell
     if self:isColliding(x, y) then
+        
+        -- Primary button
         if button == 1 then
-            if self.state == self.states.focus then
-                self.state = self.states.normal
-            else
+            
+            -- If the state is normal, set it to focus, else do the reverse
+            if self.state == self.states.normal then
                 self.state = self.states.focus
+            elseif self.state == self.states.focus then
+                self.state = self.states.normal
             end
+        
+        -- Secondary button
         elseif button == 2 then
+            -- Delete the cell's value and return to normal state
             self.value = 0
             self.state = self.states.normal
         end
@@ -74,6 +91,7 @@ function Cell:mousePressed(x, y, button, istouch, presses)
 end
 
 function Cell:keyPressed(key, scancode, isrepeat)
+    -- If focus state, set the value according to the key pressed
     if self.state == self.states.focus then
         if key >= "1" and key <= "9" then
             self.value = tonumber(key)
@@ -93,6 +111,7 @@ function Cell:update(dt)
 end
 
 function Cell:draw()
+    -- Select fill color
     if self.state == self.states.normal then
         if self.hover then
             love.graphics.setColor(self.hoverColor)
