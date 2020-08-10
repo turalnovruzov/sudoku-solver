@@ -44,23 +44,9 @@ end
 
 function Board:mousePressed(x, y, button, istouch, presses)
     if self.state == self.states.normal then
-        -- If a cell is already focused on only send the message to that cell
-        local sent = false
-
         for i, row in ipairs(self.cells) do
             for j, cell in ipairs(row) do
-                if cell:isFocused() then
-                    cell:mousePressed(x, y, button, istouch, presses)
-                    sent = true
-                end
-            end
-        end
-
-        if not sent then
-            for i, row in ipairs(self.cells) do
-                for j, cell in ipairs(row) do
-                    cell:mousePressed(x, y, button, istouch, presses)
-                end
+                cell:mousePressed(x, y, button, istouch, presses)
             end
         end
     end

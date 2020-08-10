@@ -87,6 +87,11 @@ function Cell:mousePressed(x, y, button, istouch, presses)
             self.value = 0
             self.state = self.states.normal
         end
+    else
+        -- If primary button and state focus
+        if button == 1 and self.state == self.states.focus then
+            self.state = self.states.normal
+        end
     end
 end
 
