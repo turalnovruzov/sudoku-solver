@@ -42,11 +42,24 @@ function Board:initialize(x, y)
     self.state = self.states.normal
 end
 
+function Board:isColliding(x, y)
+    -- Checks if the given point collides with the board
+    -- Returns true if collides, false otherwise
+
+    if x >= self.x and x <= (self.x + self.width) and y >= self.y and y <= (self.y + self.width) then
+        return true
+    end
+
+    return false
+end
+
 function Board:mousePressed(x, y, button, istouch, presses)
     if self.state == self.states.normal then
-        for i, row in ipairs(self.cells) do
-            for j, cell in ipairs(row) do
-                cell:mousePressed(x, y, button, istouch, presses)
+        if self:isColliding(x, y) then
+            for i, row in ipairs(self.cells) do
+                for j, cell in ipairs(row) do
+                    cell:mousePressed(x, y, button, istouch, presses)
+                end
             end
         end
     end
