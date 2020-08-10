@@ -112,6 +112,7 @@ function Board:initialize(x, y)
       
     for i, v in ipairs(squares) do
         self.cells[v.x + 1][v.y + 1].value = v.value
+        self.cells[v.x + 1][v.y + 1].const = true
     end
 
     -- Colors

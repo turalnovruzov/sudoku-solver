@@ -12,6 +12,14 @@ function Cell:initialize(x, y, width, value)
     self.width = width
     self.value = value
     self.font = love.graphics.newFont("fonts/SourceSansPro-Regular.ttf", 35)
+
+    -- A constant cell's value cannot be changed unless cell.value is directly modified
+    -- Used for the cells that are initialized at the start of the game
+    self.const = false
+
+    -- Whether the mouse is hovering over the cell
+    self.hover = false
+
     self.normalColor = {1, 1, 1}
 
     -- 187, 222, 251
@@ -22,9 +30,6 @@ function Cell:initialize(x, y, width, value)
 
     -- 221, 238, 254
     self.hoverColor = {221 / 255, 238 / 255, 254 / 255}
-
-    -- Whether the mouse is hovering over the cell
-    self.hover = false
 
     self.states = {
         normal=0,
@@ -97,7 +102,7 @@ end
 
 function Cell:keyPressed(key, scancode, isrepeat)
     -- If focus state, set the value according to the key pressed
-    if self.state == self.states.focus then
+    if self.state == self.states.focus and not self.const then
         if key >= "1" and key <= "9" then
             self.value = tonumber(key)
         end
