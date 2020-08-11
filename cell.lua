@@ -29,7 +29,10 @@ function Cell:initialize(x, y, width, value)
     self.focusColor = {187 / 255, 222 / 255, 251 / 255}
 
     -- 29, 46, 66
-    self.textColor = {29 / 255, 46 / 255, 66 / 255}
+    self.constTextColor = {29 / 255, 46 / 255, 66 / 255}
+
+    -- 76, 143, 226
+    self.textColor = {76 / 255, 143 / 255, 226 / 255}
 
     -- 221, 238, 254
     self.hoverColor = {221 / 255, 238 / 255, 254 / 255}
@@ -161,7 +164,9 @@ function Cell:draw()
 
     -- Number
     if self:hasValue() then
-        if self.conflict and not self.const then
+        if self.const then
+            love.graphics.setColor(self.constTextColor)
+        elseif self.conflict then
             love.graphics.setColor(self.conflictTextColor)
         else
             love.graphics.setColor(self.textColor)
