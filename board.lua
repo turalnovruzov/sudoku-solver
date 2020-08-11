@@ -28,87 +28,7 @@ function Board:initialize(x, y)
         y_ = y_ + self.cellWidth + 1
     end
 
-    local squares = { {
-            ["x"] = 0,
-            ["y"] = 4,
-            value = 2
-        }, {
-            ["x"] = 0,
-            ["y"] = 5,
-            value = 5
-        }, {
-            ["x"] = 1,
-            ["y"] = 1,
-            value = 5
-        }, {
-            ["x"] = 1,
-            ["y"] = 7,
-            value = 2
-        }, {
-            ["x"] = 2,
-            ["y"] = 4,
-            value = 3
-        }, {
-            ["x"] = 2,
-            ["y"] = 6,
-            value = 5
-        }, {
-            ["x"] = 2,
-            ["y"] = 8,
-            value = 4
-        }, {
-            ["x"] = 3,
-            ["y"] = 0,
-            value = 2
-        }, {
-            ["x"] = 3,
-            ["y"] = 3,
-            value = 5
-        }, {
-            ["x"] = 4,
-            ["y"] = 2,
-            value = 1
-        }, {
-            ["x"] = 4,
-            ["y"] = 6,
-            value = 4
-        }, {
-            ["x"] = 5,
-            ["y"] = 1,
-            value = 9
-        }, {
-            ["x"] = 5,
-            ["y"] = 6,
-            value = 1
-        }, {
-            ["x"] = 6,
-            ["y"] = 4,
-            value = 8
-        }, {
-            ["x"] = 6,
-            ["y"] = 8,
-            value = 3
-        }, {
-            ["x"] = 7,
-            ["y"] = 1,
-            value = 3
-        }, {
-            ["x"] = 7,
-            ["y"] = 7,
-            value = 4
-        }, {
-            ["x"] = 8,
-            ["y"] = 0,
-            value = 4
-        }, {
-            ["x"] = 8,
-            ["y"] = 5,
-            value = 9
-        }, {
-            ["x"] = 8,
-            ["y"] = 8,
-            value = 8
-        } }
+    local squares = {{["x"]=0,["y"]=4,value=2},{["x"]=0,["y"]=5,value=5},{["x"]=1,["y"]=1,value=5},{["x"]=1,["y"]=7,value=2},{["x"]=2,["y"]=4,value=3},{["x"]=2,["y"]=6,value=5},{["x"]=2,["y"]=8,value=4},{["x"]=3,["y"]=0,value=2},{["x"]=3,["y"]=3,value=5},{["x"]=4,["y"]=2,value=1},{["x"]=4,["y"]=6,value=4},{["x"]=5,["y"]=1,value=9},{["x"]=5,["y"]=6,value=1},{["x"]=6,["y"]=4,value=8},{["x"]=6,["y"]=8,value=3},{["x"]=7,["y"]=1,value=3},{["x"]=7,["y"]=7,value=4},{["x"]=8,["y"]=0,value=4},{["x"]=8,["y"]=5,value=9},{["x"]=8,["y"]=8,value=8}}
       
     for i, v in ipairs(squares) do
         self.cells[v.x + 1][v.y + 1].value = v.value
@@ -140,12 +60,95 @@ function Board:isColliding(x, y)
     return false
 end
 
+function Board:checkConflict(i, j)
+    -- Checks if the given cell has any conflicts
+    -- Returns true if the cell has conflicts, false otherwise
+
+    -- Horizontal checking
+    for j_=1,9 do
+        if self.cells[i][j_]:hasValue() and j_ ~= j then
+            if self.cells[i][j_].value == self.cells[i][j].value then
+                return true
+            end
+        end
+    end
+
+    -- Vertical
+    for i_=1,9 do
+        if self.cells[i_][j]:hasValue() and i_ ~= i then
+            if self.cells[i_][j].value == self.cells[i][j].value then
+                return true
+            end
+        end
+    end
+
+    -- Cube
+    for i_ = math.floor((i - 1) / 3) * 3 + 1, math.floor((i - 1) / 3 + 1) * 3 do
+        for j_ = math.floor((j - 1) / 3) * 3 + 1, math.floor((j - 1) / 3 + 1) * 3  do
+            if self.cells[i_][j_]:hasValue() and i_ ~= i and j_ ~= j then
+                if self.cells[i_][j_].value == self.cells[i][j].value then
+                    return true
+                end
+            end
+        end
+    end
+
+    return false
+end
+
+function Board:updateConflicts(i, j)
+    -- Updates cells' conflict values 
+
+    -- Horizontal
+    for j_=1,9 do
+        if self.cells[i][j_]:hasValue()  and j_ ~= j then
+            if self.cells[i][j_].value == self.cells[i][j].value then
+                self.cells[i][j_].conflict = true
+            elseif not self:checkConflict(i, j_) then
+                self.cells[i][j_].conflict = false
+            end
+        end
+    end
+
+    -- Vertical
+    for i_=1,9 do
+        if self.cells[i_][j]:hasValue()  and i_ ~= i then
+            if self.cells[i_][j].value == self.cells[i][j].value then
+                self.cells[i_][j].conflict = true
+            elseif not self:checkConflict(i_, j) then
+                self.cells[i_][j].conflict = false
+            end
+        end
+    end
+
+    -- Cube
+    for i_ = math.floor((i - 1) / 3) * 3 + 1, math.floor((i - 1) / 3 + 1) * 3 do
+        for j_ = math.floor((j - 1) / 3) * 3 + 1, math.floor((j - 1) / 3 + 1) * 3  do
+            if self.cells[i_][j_]:hasValue() and i_ ~= i and j_ ~= j then
+                if self.cells[i_][j_].value == self.cells[i][j].value then
+                    self.cells[i_][j_].conflict = true
+                elseif not self:checkConflict(i_, j_) then
+                    self.cells[i_][j_].conflict = false
+                end
+            end
+        end
+    end
+
+    if self:checkConflict(i, j) then
+        self.cells[i][j].conflict = true
+    else
+        self.cells[i][j].conflict = false
+    end
+end
+
 function Board:mousePressed(x, y, button, istouch, presses)
     if self.state == self.states.normal then
         if self:isColliding(x, y) then
             for i, row in ipairs(self.cells) do
                 for j, cell in ipairs(row) do
-                    cell:mousePressed(x, y, button, istouch, presses)
+                    if cell:mousePressed(x, y, button, istouch, presses) then
+                        self:updateConflicts(i, j)
+                    end
                 end
             end
         end
@@ -156,7 +159,9 @@ function Board:keyPressed(key, scancode, isrepeat)
     if self.state == self.states.normal then
         for i, row in ipairs(self.cells) do
             for j, cell in ipairs(row) do
-                cell:keyPressed(key, scancode, isrepeat)
+                if cell:keyPressed(key, scancode, isrepeat) then
+                    self:updateConflicts(i, j)
+                end
             end
         end
     end

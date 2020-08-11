@@ -80,13 +80,8 @@ function Cell:isColliding(x, y)
     return false
 end
 
-function Cell:setConflict(b)
-    -- Sets whether the cell is in conflict or not
-    -- b: boolean
-    self.conflict = b
-end
-
 function Cell:mousePressed(x, y, button, istouch, presses)
+    -- Returns true if value was deleted, false otherwise
 
     -- If the mouse is colliding with the cell
     if self:isColliding(x, y) then
@@ -102,10 +97,12 @@ function Cell:mousePressed(x, y, button, istouch, presses)
             end
         
         -- Secondary button
-        elseif button == 2 then
+        elseif button == 2 and not self.const then
             -- Delete the cell's value and return to normal state
             self.value = 0
             self.state = self.states.normal
+
+            return true
         end
     else
         -- If primary button and state focus
@@ -113,6 +110,8 @@ function Cell:mousePressed(x, y, button, istouch, presses)
             self.state = self.states.normal
         end
     end
+
+    return false
 end
 
 function Cell:keyPressed(key, scancode, isrepeat)
