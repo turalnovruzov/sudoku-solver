@@ -1,4 +1,5 @@
 local class = require "lib/middleclass"
+local json = require "lib/json"
 
 Board = class("Board")
 
@@ -28,11 +29,13 @@ function Board:initialize(x, y)
         y_ = y_ + self.cellWidth + 1
     end
 
-    local squares = {{["x"]=0,["y"]=4,value=2},{["x"]=0,["y"]=5,value=5},{["x"]=1,["y"]=1,value=5},{["x"]=1,["y"]=7,value=2},{["x"]=2,["y"]=4,value=3},{["x"]=2,["y"]=6,value=5},{["x"]=2,["y"]=8,value=4},{["x"]=3,["y"]=0,value=2},{["x"]=3,["y"]=3,value=5},{["x"]=4,["y"]=2,value=1},{["x"]=4,["y"]=6,value=4},{["x"]=5,["y"]=1,value=9},{["x"]=5,["y"]=6,value=1},{["x"]=6,["y"]=4,value=8},{["x"]=6,["y"]=8,value=3},{["x"]=7,["y"]=1,value=3},{["x"]=7,["y"]=7,value=4},{["x"]=8,["y"]=0,value=4},{["x"]=8,["y"]=5,value=9},{["x"]=8,["y"]=8,value=8}}
-      
+    -- local squares = {{["x"]=0,["y"]=1,value=8},{["x"]=0,["y"]=2,value=5},{["x"]=0,["y"]=4,value=3},{["x"]=0,["y"]=6,value=2},{["x"]=1,["y"]=2,value=3},{["x"]=1,["y"]=5,value=5},{["x"]=1,["y"]=6,value=8},{["x"]=2,["y"]=0,value=7},{["x"]=2,["y"]=1,value=2},{["x"]=2,["y"]=3,value=9},{["x"]=2,["y"]=5,value=6},{["x"]=2,["y"]=6,value=5},{["x"]=2,["y"]=8,value=4},{["x"]=3,["y"]=0,value=9},{["x"]=3,["y"]=3,value=3},{["x"]=3,["y"]=4,value=1},{["x"]=3,["y"]=7,value=8},{["x"]=3,["y"]=8,value=5},{["x"]=4,["y"]=0,value=5},{["x"]=4,["y"]=4,value=7},{["x"]=5,["y"]=0,value=3},{["x"]=5,["y"]=1,value=1},{["x"]=5,["y"]=4,value=5},{["x"]=5,["y"]=5,value=8},{["x"]=5,["y"]=6,value=9},{["x"]=5,["y"]=8,value=2},{["x"]=6,["y"]=3,value=5},{["x"]=6,["y"]=5,value=3},{["x"]=6,["y"]=6,value=7},{["x"]=6,["y"]=7,value=2},{["x"]=7,["y"]=1,value=3},{["x"]=7,["y"]=3,value=8},{["x"]=7,["y"]=7,value=5},{["x"]=7,["y"]=8,value=6},{["x"]=8,["y"]=0,value=8},{["x"]=8,["y"]=2,value=7},{["x"]=8,["y"]=3,value=1},{["x"]=8,["y"]=4,value=6},{["x"]=8,["y"]=6,value=4},{["x"]=8,["y"]=8,value=3}}
+    local squares = {{["y"]=1,["x"]=1,value=4},{["y"]=2,["x"]=1,value=8},{["y"]=3,["x"]=1,value=5},{["y"]=4,["x"]=1,value=7},{["y"]=5,["x"]=1,value=3},{["y"]=6,["x"]=1,value=1},{["y"]=7,["x"]=1,value=2},{["y"]=8,["x"]=1,value=6},{["y"]=9,["x"]=1,value=9},{["y"]=1,["x"]=2,value=6},{["y"]=2,["x"]=2,value=9},{["y"]=3,["x"]=2,value=3},{["y"]=4,["x"]=2,value=4},{["y"]=5,["x"]=2,value=2},{["y"]=6,["x"]=2,value=5},{["y"]=7,["x"]=2,value=8},{["y"]=8,["x"]=2,value=1},{["y"]=9,["x"]=2,value=7},{["y"]=1,["x"]=3,value=7},{["y"]=2,["x"]=3,value=2},{["y"]=3,["x"]=3,value=1},{["y"]=4,["x"]=3,value=9},{["y"]=5,["x"]=3,value=8},{["y"]=6,["x"]=3,value=6},{["y"]=7,["x"]=3,value=5},{["y"]=8,["x"]=3,value=3},{["y"]=9,["x"]=3,value=4},{["y"]=1,["x"]=4,value=9},{["y"]=2,["x"]=4,value=7},{["y"]=3,["x"]=4,value=2},{["y"]=4,["x"]=4,value=3},{["y"]=5,["x"]=4,value=1},{["y"]=7,["x"]=4,value=6},{["y"]=8,["x"]=4,value=8},{["y"]=9,["x"]=4,value=5},{["y"]=1,["x"]=5,value=5},{["y"]=2,["x"]=5,value=6},{["y"]=3,["x"]=5,value=8},{["y"]=4,["x"]=5,value=2},{["y"]=5,["x"]=5,value=7},{["y"]=7,["x"]=5,value=3},{["y"]=8,["x"]=5,value=4},{["y"]=9,["x"]=5,value=1},{["y"]=1,["x"]=6,value=3},{["y"]=2,["x"]=6,value=1},{["y"]=3,["x"]=6,value=4},{["y"]=4,["x"]=6,value=6},{["y"]=5,["x"]=6,value=5},{["y"]=6,["x"]=6,value=8},{["y"]=7,["x"]=6,value=9},{["y"]=8,["x"]=6,value=7},{["y"]=9,["x"]=6,value=2},{["y"]=1,["x"]=7,value=1},{["y"]=2,["x"]=7,value=4},{["y"]=3,["x"]=7,value=6},{["y"]=4,["x"]=7,value=5},{["y"]=6,["x"]=7,value=3},{["y"]=7,["x"]=7,value=7},{["y"]=8,["x"]=7,value=2},{["y"]=9,["x"]=7,value=8},{["y"]=1,["x"]=8,value=2},{["y"]=2,["x"]=8,value=3},{["y"]=3,["x"]=8,value=9},{["y"]=4,["x"]=8,value=8},{["y"]=5,["x"]=8,value=4},{["y"]=6,["x"]=8,value=7},{["y"]=7,["x"]=8,value=1},{["y"]=8,["x"]=8,value=5},{["y"]=9,["x"]=8,value=6},{["y"]=1,["x"]=9,value=8},{["y"]=2,["x"]=9,value=5},{["y"]=3,["x"]=9,value=7},{["y"]=4,["x"]=9,value=1},{["y"]=5,["x"]=9,value=6},{["y"]=6,["x"]=9,value=2},{["y"]=7,["x"]=9,value=4},{["y"]=8,["x"]=9,value=9},{["y"]=9,["x"]=9,value=3}}
+    
+
     for i, v in ipairs(squares) do
-        self.cells[v.x + 1][v.y + 1].value = v.value
-        self.cells[v.x + 1][v.y + 1].const = true
+        self.cells[v.x ][v.y ].value = v.value
+        self.cells[v.x ][v.y ].const = true
     end
 
     -- Colors
@@ -43,7 +46,8 @@ function Board:initialize(x, y)
     self.boldLineColor = {52 / 255, 72 / 255, 97 / 255}
 
     self.states = {
-        normal = 0
+        normal = 0,
+        solved = 1
     }
 
     self.state = self.states.normal
@@ -141,12 +145,42 @@ function Board:updateConflicts(i, j)
     end
 end
 
+function Board:terminal(update)
+    -- Checks if the puzzle is solved
+    -- update (boolean): if true will update the object to solved state
+    -- Returns true if solved, false otherwise
+
+    for i=1,9 do
+        for j=1,9 do
+            if not self.cells[i][j]:hasValue() or self.cells[i][j].conflict then
+                return false
+            end
+        end
+    end
+
+    if update then
+        print('a')
+        self.state = self.states.solved
+
+        -- Deafult all cells
+        for i = 1,9 do
+            for j = 1,9 do
+                self.cells[i][j].hover = false
+                self.cells[i][j].state = self.cells[i][j].states.normal
+            end
+        end
+    end
+
+    return true
+end
+
 function Board:mousePressed(x, y, button, istouch, presses)
     if self.state == self.states.normal and self:isColliding(x, y) then
         for i, row in ipairs(self.cells) do
             for j, cell in ipairs(row) do
                 if cell:mousePressed(x, y, button, istouch, presses) then
                     self:updateConflicts(i, j)
+                    self:terminal(true)
                 end
             end
         end
@@ -159,6 +193,19 @@ function Board:keyPressed(key, scancode, isrepeat)
             for j, cell in ipairs(row) do
                 if cell:keyPressed(key, scancode, isrepeat) then
                     self:updateConflicts(i, j)
+                    self:terminal(true)
+                    
+                    -- tmp = {}
+                    -- for i = 1,9 do
+                    --     for j = 1,9 do
+                    --         if self.cells[i][j]:hasValue() then
+                    --             table.insert(tmp, {["x"]=i,["y"]=j,value=self.cells[i][j].value})
+                    --         end
+                    --     end
+                    -- end
+                    -- print(json.encode(tmp))
+                    -- print('')
+
                 end
             end
         end
@@ -176,34 +223,30 @@ function Board:update()
 end
 
 function Board:draw()
-    -- Normal state
-    if self.state == self.states.normal then
-
-        -- Draw cells
-        for i, row in ipairs(self.cells) do
-            for j, cell in ipairs(row) do
-                cell:draw()
-            end
+    -- Draw cells
+    for i, row in ipairs(self.cells) do
+        for j, cell in ipairs(row) do
+            cell:draw()
         end
+    end
 
-        -- Draw lines
-        love.graphics.setColor(self.lineColor)
-        for x_ = self.x + self.cellWidth + 1, self.x + (self.width - self.cellWidth + 1), self.cellWidth + 1 do
-            love.graphics.line(x_, self.y, x_, self.y + self.width - 1)
-        end
+    -- Draw lines
+    love.graphics.setColor(self.lineColor)
+    for x_ = self.x + self.cellWidth + 1, self.x + (self.width - self.cellWidth + 1), self.cellWidth + 1 do
+        love.graphics.line(x_, self.y, x_, self.y + self.width - 1)
+    end
 
-        for y_ = self.y + self.cellWidth + 1, self.y + (self.width - self.cellWidth + 1), self.cellWidth + 1 do
-            love.graphics.line(self.x, y_, self.x + self.width - 1, y_)
-        end
+    for y_ = self.y + self.cellWidth + 1, self.y + (self.width - self.cellWidth + 1), self.cellWidth + 1 do
+        love.graphics.line(self.x, y_, self.x + self.width - 1, y_)
+    end
 
-        love.graphics.setColor(self.boldLineColor)
-        for x_ = self.x, self.x + self.width, 3 * (self.cellWidth + 1) do
-            love.graphics.line(x_, self.y, x_, self.y + self.width - 1)
-        end
+    love.graphics.setColor(self.boldLineColor)
+    for x_ = self.x, self.x + self.width, 3 * (self.cellWidth + 1) do
+        love.graphics.line(x_, self.y, x_, self.y + self.width - 1)
+    end
 
-        for y_ = self.y, self.y + self.width, 3 * (self.cellWidth + 1) do
-            love.graphics.line(self.x, y_, self.x + self.width - 1, y_)
-        end
+    for y_ = self.y, self.y + self.width, 3 * (self.cellWidth + 1) do
+        love.graphics.line(self.x, y_, self.x + self.width - 1, y_)
     end
 end
 
