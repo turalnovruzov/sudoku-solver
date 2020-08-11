@@ -142,13 +142,11 @@ function Board:updateConflicts(i, j)
 end
 
 function Board:mousePressed(x, y, button, istouch, presses)
-    if self.state == self.states.normal then
-        if self:isColliding(x, y) then
-            for i, row in ipairs(self.cells) do
-                for j, cell in ipairs(row) do
-                    if cell:mousePressed(x, y, button, istouch, presses) then
-                        self:updateConflicts(i, j)
-                    end
+    if self.state == self.states.normal and self:isColliding(x, y) then
+        for i, row in ipairs(self.cells) do
+            for j, cell in ipairs(row) do
+                if cell:mousePressed(x, y, button, istouch, presses) then
+                    self:updateConflicts(i, j)
                 end
             end
         end
