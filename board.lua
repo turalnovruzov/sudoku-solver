@@ -159,7 +159,6 @@ function Board:terminal(update)
     end
 
     if update then
-        print('a')
         self.state = self.states.solved
 
         -- Deafult all cells
@@ -194,18 +193,6 @@ function Board:keyPressed(key, scancode, isrepeat)
                 if cell:keyPressed(key, scancode, isrepeat) then
                     self:updateConflicts(i, j)
                     self:terminal(true)
-                    
-                    -- tmp = {}
-                    -- for i = 1,9 do
-                    --     for j = 1,9 do
-                    --         if self.cells[i][j]:hasValue() then
-                    --             table.insert(tmp, {["x"]=i,["y"]=j,value=self.cells[i][j].value})
-                    --         end
-                    --     end
-                    -- end
-                    -- print(json.encode(tmp))
-                    -- print('')
-
                 end
             end
         end
