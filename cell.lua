@@ -20,6 +20,9 @@ function Cell:initialize(x, y, width, value)
     -- Whether the mouse is hovering over the cell
     self.hover = false
 
+    -- Whether the cell is in conflict
+    self.conflict = false
+
     self.normalColor = {1, 1, 1}
 
     -- 187, 222, 251
@@ -30,6 +33,12 @@ function Cell:initialize(x, y, width, value)
 
     -- 221, 238, 254
     self.hoverColor = {221 / 255, 238 / 255, 254 / 255}
+
+    -- 247, 206, 214
+    self.conflictColor = {247 / 255, 206 / 255, 214 / 255}
+
+    -- 251, 61, 63
+    self.conflictTextColor = {251 / 255, 61 / 255, 63 / 255}
 
     self.states = {
         normal=0,
@@ -71,6 +80,12 @@ function Cell:isColliding(x, y)
     return false
 end
 
+function Cell:setConflict(b)
+    -- Sets whether the cell is in conflict or not
+    -- b: boolean
+    self.conflict = b
+end
+
 function Cell:mousePressed(x, y, button, istouch, presses)
 
     -- If the mouse is colliding with the cell
@@ -102,20 +117,28 @@ end
 
 function Cell:keyPressed(key, scancode, isrepeat)
     -- If focus state, set the value according to the key pressed
+    -- Returns true if value updated, flase otherwise
     if self.state == self.states.focus and not self.const then
         if key >= "1" and key <= "9" then
             self.value = tonumber(key)
+            return true
         end
     end
+
+    return false
 end
 
 function Cell:update(dt)
     -- Mouse hover
     if self.state == self.states.normal then
         if self:isColliding(love.mouse.getX(), love.mouse.getY()) then
-            self.hover = true
+            if not self.hover then
+                self.hover = true
+            end
         else
-            self.hover = false
+            if self.hover then
+                self.hover = false
+            end
         end
     end
 end
@@ -123,7 +146,9 @@ end
 function Cell:draw()
     -- Select fill color
     if self.state == self.states.normal then
-        if self.hover then
+        if self.conflict then
+            love.graphics.setColor(self.conflictColor)
+        elseif self.hover then
             love.graphics.setColor(self.hoverColor)
         else
             love.graphics.setColor(self.normalColor)
@@ -137,7 +162,11 @@ function Cell:draw()
 
     -- Number
     if self:hasValue() then
-        love.graphics.setColor(self.textColor)
+        if self.conflict and not self.const then
+            love.graphics.setColor(self.conflictTextColor)
+        else
+            love.graphics.setColor(self.textColor)
+        end
         love.graphics.printf(tostring(self.value), self.font, self.x, self.y, self.width, "center")
     end
 end
