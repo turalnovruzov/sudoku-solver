@@ -273,6 +273,15 @@ end
 
 function Board:solve()
     if self.state == self.states.normal then
+        -- Empty the board
+        for i = 1,9 do
+            for j = 1,9 do
+                if not self.cells[i][j].const and self.cells[i][j]:hasValue() then
+                    self.cells[i][j].value = 0
+                    self:updateConflicts(i, j)
+                end
+            end
+        end
         cells_copy = deepcopy(self.cells)
         self:backtrack()
         self.cells = cells_copy
