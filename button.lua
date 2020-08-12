@@ -2,10 +2,10 @@ local class = require "lib/middleclass"
 
 Button = class("Button")
 
-function Button:initialize(x, y, width, fontSize, text)
+function Button:initialize(x, y, width, font, text)
     self.x = x
     self.y = y
-    self.font = love.graphics.newFont("fonts/SourceSansPro-Regular.ttf", fontSize)
+    self.font = font
     self.width = width
     self.height = self.font:getHeight() + 5
     self.text = text

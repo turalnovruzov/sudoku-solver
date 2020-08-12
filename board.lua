@@ -173,6 +173,14 @@ function Board:terminal(update)
     return true
 end
 
+function Board:isSolved()
+    if self.state == self.states.solved then
+        return true
+    end
+
+    return false
+end
+
 function Board:mousePressed(x, y, button, istouch, presses)
     if self.state == self.states.normal and self:isColliding(x, y) then
         for i, row in ipairs(self.cells) do
