@@ -34,6 +34,10 @@ function Board:initialize(x, y)
     -- Array of instructions to visualize the solving
     self.sequence = {}
 
+    -- Animation timers for sequence
+    self.sequence_idx = 0
+    self.sequence_next = 0
+
     -- Cells
     local Cell = require "cell"
     self.cells = {}
@@ -248,6 +252,7 @@ function Board:solve()
     cells_copy = deepcopy(self.cells)
     self:backtrack()
     self.cells = cells_copy
+    self.state = self.states.solving
 end
 
 function Board:mousePressed(x, y, button, istouch, presses)
@@ -276,13 +281,37 @@ function Board:keyPressed(key, scancode, isrepeat)
     end
 end
 
-function Board:update()
+function Board:update(dt)
     if self.state == self.states.normal then
         for i, row in ipairs(self.cells) do
             for j, cell in ipairs(row) do
                 cell:update(dt)
             end
         end
+    elseif self.state == self.states.solving then
+        if self.sequence_idx == 0 or self.sequence_next >= 1 then
+            self.sequence_idx = self.sequence_idx + 1
+            self.sequence_next = 0
+
+            local i = self.sequence[self.sequence_idx][1]
+            local j = self.sequence[self.sequence_idx][2]
+            local command = self.sequence[self.sequence_idx][3]
+            print(command)
+
+            if command == "set" then
+                local value = self.sequence[self.sequence_idx][4]
+                self.cells[i][j].value = value
+                self:updateConflicts(i, j)
+
+                if self:terminal(true) then
+                    self.state = self.states.solved
+                end
+            elseif command == "del" then
+                self.cells[i][j].value = 0
+                self:updateConflicts(i, j)
+            end
+        end
+        self.sequence_next = self.sequence_next + dt * 50
     end
 end
 

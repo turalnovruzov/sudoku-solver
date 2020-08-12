@@ -25,7 +25,7 @@ function love.mousepressed(x, y, button, istouch, presses)
     end
 
     if solveButton:mousePressed(x, y, button, istouch, presses) then
-        -- TODO
+        board:solve()
     end
 end
 
