@@ -221,7 +221,7 @@ end
 function Board:backtrack()
     -- Solves the board and saves the solving steps in self.sequences
     -- Returns true if solved, false otherwise
-    if self:terminal(true) then
+    if self:terminal() then
         return true
     end
 
@@ -242,6 +242,12 @@ function Board:backtrack()
     table.insert(self.sequence, {cell[1], cell[2], "del"})
     
     return false
+end
+
+function Board:solve()
+    cells_copy = deepcopy(self.cells)
+    self:backtrack()
+    self.cells = cells_copy
 end
 
 function Board:mousePressed(x, y, button, istouch, presses)
