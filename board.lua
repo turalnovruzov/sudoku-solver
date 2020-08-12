@@ -71,7 +71,8 @@ function Board:initialize(x, y)
 
     self.states = {
         normal = 0,
-        solved = 1
+        solved = 1,
+        solving = 2
     }
 
     self.state = self.states.normal
@@ -207,7 +208,7 @@ end
 
 function Board:chooseCell()
     -- Chooses a cell that has no value
-    -- Returns the cell's coordinates (i, j), if not found returns nil
+    -- Returns the cell's coordinates (i, j)
     for i = 1,9 do
         for j = 1,9 do
             if not self.cells[i][j]:hasValue() then
@@ -215,8 +216,6 @@ function Board:chooseCell()
             end
         end
     end
-
-    return nil
 end
 
 function Board:backtrack()
@@ -230,10 +229,7 @@ function Board:backtrack()
 
     for value = 1,9 do
         self.cells[cell[1]][cell[2]].value = value
-        print(cell[1])
-        print(cell[2])
-        print(value)
-        print('')
+        table.insert(self.sequence, {cell[1], cell[2], "set", value})
 
         if not self:checkConflict(cell[1],cell[2]) then
             if self:backtrack() then
@@ -243,6 +239,7 @@ function Board:backtrack()
     end
     
     self.cells[cell[1]][cell[2]].value = 0
+    table.insert(self.sequence, {cell[1], cell[2], "del"})
     
     return false
 end
