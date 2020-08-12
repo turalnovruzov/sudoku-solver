@@ -1,5 +1,6 @@
 local class = require "lib/middleclass"
 local json = require "lib/json"
+local http = require "socket.http"
 
 Board = class("Board")
 
@@ -57,9 +58,13 @@ function Board:initialize(x, y)
         y_ = y_ + self.cellWidth + 1
     end
 
-    local squares = {{["x"]=0,["y"]=1,value=8},{["x"]=0,["y"]=2,value=5},{["x"]=0,["y"]=4,value=3},{["x"]=0,["y"]=6,value=2},{["x"]=1,["y"]=2,value=3},{["x"]=1,["y"]=5,value=5},{["x"]=1,["y"]=6,value=8},{["x"]=2,["y"]=0,value=7},{["x"]=2,["y"]=1,value=2},{["x"]=2,["y"]=3,value=9},{["x"]=2,["y"]=5,value=6},{["x"]=2,["y"]=6,value=5},{["x"]=2,["y"]=8,value=4},{["x"]=3,["y"]=0,value=9},{["x"]=3,["y"]=3,value=3},{["x"]=3,["y"]=4,value=1},{["x"]=3,["y"]=7,value=8},{["x"]=3,["y"]=8,value=5},{["x"]=4,["y"]=0,value=5},{["x"]=4,["y"]=4,value=7},{["x"]=5,["y"]=0,value=3},{["x"]=5,["y"]=1,value=1},{["x"]=5,["y"]=4,value=5},{["x"]=5,["y"]=5,value=8},{["x"]=5,["y"]=6,value=9},{["x"]=5,["y"]=8,value=2},{["x"]=6,["y"]=3,value=5},{["x"]=6,["y"]=5,value=3},{["x"]=6,["y"]=6,value=7},{["x"]=6,["y"]=7,value=2},{["x"]=7,["y"]=1,value=3},{["x"]=7,["y"]=3,value=8},{["x"]=7,["y"]=7,value=5},{["x"]=7,["y"]=8,value=6},{["x"]=8,["y"]=0,value=8},{["x"]=8,["y"]=2,value=7},{["x"]=8,["y"]=3,value=1},{["x"]=8,["y"]=4,value=6},{["x"]=8,["y"]=6,value=4},{["x"]=8,["y"]=8,value=3}}
-    -- local squares = {{["y"]=1,["x"]=1,value=4},{["y"]=2,["x"]=1,value=8},{["y"]=3,["x"]=1,value=5},{["y"]=4,["x"]=1,value=7},{["y"]=5,["x"]=1,value=3},{["y"]=6,["x"]=1,value=1},{["y"]=7,["x"]=1,value=2},{["y"]=8,["x"]=1,value=6},{["y"]=9,["x"]=1,value=9},{["y"]=1,["x"]=2,value=6},{["y"]=2,["x"]=2,value=9},{["y"]=3,["x"]=2,value=3},{["y"]=4,["x"]=2,value=4},{["y"]=5,["x"]=2,value=2},{["y"]=6,["x"]=2,value=5},{["y"]=7,["x"]=2,value=8},{["y"]=8,["x"]=2,value=1},{["y"]=9,["x"]=2,value=7},{["y"]=1,["x"]=3,value=7},{["y"]=2,["x"]=3,value=2},{["y"]=3,["x"]=3,value=1},{["y"]=4,["x"]=3,value=9},{["y"]=5,["x"]=3,value=8},{["y"]=6,["x"]=3,value=6},{["y"]=7,["x"]=3,value=5},{["y"]=8,["x"]=3,value=3},{["y"]=9,["x"]=3,value=4},{["y"]=1,["x"]=4,value=9},{["y"]=2,["x"]=4,value=7},{["y"]=3,["x"]=4,value=2},{["y"]=4,["x"]=4,value=3},{["y"]=5,["x"]=4,value=1},{["y"]=7,["x"]=4,value=6},{["y"]=8,["x"]=4,value=8},{["y"]=9,["x"]=4,value=5},{["y"]=1,["x"]=5,value=5},{["y"]=2,["x"]=5,value=6},{["y"]=3,["x"]=5,value=8},{["y"]=4,["x"]=5,value=2},{["y"]=5,["x"]=5,value=7},{["y"]=7,["x"]=5,value=3},{["y"]=8,["x"]=5,value=4},{["y"]=9,["x"]=5,value=1},{["y"]=1,["x"]=6,value=3},{["y"]=2,["x"]=6,value=1},{["y"]=3,["x"]=6,value=4},{["y"]=4,["x"]=6,value=6},{["y"]=5,["x"]=6,value=5},{["y"]=6,["x"]=6,value=8},{["y"]=7,["x"]=6,value=9},{["y"]=8,["x"]=6,value=7},{["y"]=9,["x"]=6,value=2},{["y"]=1,["x"]=7,value=1},{["y"]=2,["x"]=7,value=4},{["y"]=3,["x"]=7,value=6},{["y"]=4,["x"]=7,value=5},{["y"]=6,["x"]=7,value=3},{["y"]=7,["x"]=7,value=7},{["y"]=8,["x"]=7,value=2},{["y"]=9,["x"]=7,value=8},{["y"]=1,["x"]=8,value=2},{["y"]=2,["x"]=8,value=3},{["y"]=3,["x"]=8,value=9},{["y"]=4,["x"]=8,value=8},{["y"]=5,["x"]=8,value=4},{["y"]=6,["x"]=8,value=7},{["y"]=7,["x"]=8,value=1},{["y"]=8,["x"]=8,value=5},{["y"]=9,["x"]=8,value=6},{["y"]=1,["x"]=9,value=8},{["y"]=2,["x"]=9,value=5},{["y"]=3,["x"]=9,value=7},{["y"]=4,["x"]=9,value=1},{["y"]=5,["x"]=9,value=6},{["y"]=6,["x"]=9,value=2},{["y"]=7,["x"]=9,value=4},{["y"]=8,["x"]=9,value=9},{["y"]=9,["x"]=9,value=3}}
-    
+    local r, e = http.request("http://www.cs.utep.edu/cheon/ws/sudoku/new/?level=2&size=9")
+    local squares
+    if e == 200 then
+        squares = json.decode(r).squares
+    else
+        print(e)
+    end
 
     for i, v in ipairs(squares) do
         self.cells[v.x + 1][v.y + 1].value = v.value
@@ -267,10 +272,12 @@ function Board:backtrack()
 end
 
 function Board:solve()
-    cells_copy = deepcopy(self.cells)
-    self:backtrack()
-    self.cells = cells_copy
-    self.state = self.states.solving
+    if self.state == self.states.normal then
+        cells_copy = deepcopy(self.cells)
+        self:backtrack()
+        self.cells = cells_copy
+        self.state = self.states.solving
+    end
 end
 
 function Board:mousePressed(x, y, button, istouch, presses)
@@ -328,7 +335,7 @@ function Board:update(dt)
                 self:updateConflicts(i, j)
             end
         end
-        self.sequence_next = self.sequence_next + dt * 60
+        self.sequence_next = self.sequence_next + 1
     end
 end
 
