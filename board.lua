@@ -222,6 +222,24 @@ function Board:chooseCell()
     end
 end
 
+function Board:chooseDomain(i, j)
+    -- Chooses values fo the cell which don't cause conflict
+    -- Returns a list containing domiain values
+    local domain = {}
+
+    for v = 1,9 do
+        self.cells[i][j].value = v
+        
+        if not self:checkConflict(i, j)then
+            table.insert(domain, v)
+        end
+    end
+
+    self.cells[i][j].value = 0
+
+    return domain
+end
+
 function Board:backtrack()
     -- Solves the board and saves the solving steps in self.sequences
     -- Returns true if solved, false otherwise
@@ -231,7 +249,7 @@ function Board:backtrack()
 
     local cell = self:chooseCell()
 
-    for value = 1,9 do
+    for _, value in ipairs(self:chooseDomain(cell[1], cell[2])) do
         self.cells[cell[1]][cell[2]].value = value
         table.insert(self.sequence, {cell[1], cell[2], "set", value})
 
@@ -296,7 +314,6 @@ function Board:update(dt)
             local i = self.sequence[self.sequence_idx][1]
             local j = self.sequence[self.sequence_idx][2]
             local command = self.sequence[self.sequence_idx][3]
-            print(command)
 
             if command == "set" then
                 local value = self.sequence[self.sequence_idx][4]
@@ -311,7 +328,7 @@ function Board:update(dt)
                 self:updateConflicts(i, j)
             end
         end
-        self.sequence_next = self.sequence_next + dt * 50
+        self.sequence_next = self.sequence_next + dt * 60
     end
 end
 
